@@ -1,0 +1,94 @@
+name: pygame-demo
+version: '0.0.1'
+summary: Demo of using frame buffer from snappy
+
+description: |
+    PyGame bouncing ball on a snappy package
+base: core18
+confinement: devmode
+
+layout:
+    /usr/share/X11:
+        bind: $SNAP/usr/share/X11
+#    /usr/share/tcltk:
+#        bind: $SNAP/usr/share/tcltk
+#    /usr/lib/tcltk:
+#        bind: $SNAP/usr/lib/tcltk
+#    /usr/bin/sdl2-config:
+#        bind-file: $SNAP/usr/bin/sdl2-config
+
+parts:
+    xwayland-kiosk-helper:
+        plugin: cmake
+        source: https://github.com/MirServer/xwayland-kiosk-helper.git
+        build-packages: [ build-essential ]
+        stage-packages: [ xwayland, i3, libegl1-mesa ]
+
+ #   pygame:
+ #       plugin: autotools
+ #       source: pygame-1.9.6/
+ #       stage-packages: [ libfreetype6-dev, libsdl2-dev ]
+
+    pygame-demo:
+        plugin: python
+        python-version: python3
+        source: .
+        python-packages: [pygame]
+        stage-packages:
+        - libasound2
+        - libasyncns0
+        - libcaca0
+        - libflac8
+        - libfluidsynth1
+        - libfreetype6
+        - libjack-jackd2-0
+        - libjbig0
+        - libjpeg-turbo8
+        - libmad0
+        - libmikmod3
+        - libogg0
+        - libopenal1
+        - libpng16-16
+        - libportmidi0
+        - libpulse0
+        - libsdl-image1.2
+        - libsdl-mixer1.2
+        - libsdl-ttf2.0-0
+        - libsdl1.2debian
+        - libsdl2-2.0-0
+        - libslang2
+        - libsndfile1
+        - libsndio6.1
+        - libtiff5
+        - libvorbis0a
+        - libvorbisenc2
+        - libvorbisfile3
+        - libwayland-client0
+        - libwayland-cursor0
+        - libwayland-egl1
+        - libwebp6
+        - libx11-6
+        - libxau6
+        - libxcb1
+        - libxcursor1
+        - libxdmcp6
+        - libxext6
+        - libxfixes3
+        - libxi6
+        - libxinerama1
+        - libxkbcommon0
+        - libxrandr2
+        - libxrender1
+        - libxss1
+        - libxxf86vm1
+        - libglu1-mesa
+
+environment:
+      XWAYLAND_FULLSCREEN_WINDOW_HINT: title="tk"
+
+apps:
+    pygame-demo:
+        command: xwayland-kiosk-launch $SNAP/bin/pygame
+        plugs:
+        - wayland
+        - x11
