@@ -39,5 +39,5 @@ $ sudo snap run <snap_name>
 ## Resources
 - https://ubuntu.com/tutorials/x11-kiosk#5-second-pass-snapping-your-device
 
-![Demo](https://pasteboard.co/JeVqiXe.png) 
+![Demo](/static/demo.png) 
 
