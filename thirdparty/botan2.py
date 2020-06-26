@@ -30,9 +30,12 @@ import os
 from pathlib import Path
 
 
-BOTAN_BINARY_DIR_LINUX = os.path.join(Path(__file__).parent, 'libbotan-2-ubuntu-64.so')
-BOTAN_BINARY_DIR_WS = os.path.join(Path(__file__).parent, 'botan-windows-64.dll')
-print(BOTAN_BINARY_DIR_LINUX)
+#BOTAN_BINARY_DIR_LINUX = os.path.join(Path(__file__).parent, 'libbotan-2-ubuntu-64.so')
+BOTAN_BINARY_DIR_LINUX = os.environ['SNAP'] + '/libbotan-2.so'
+#BOTAN_BINARY_DIR_WS = os.path.join(Path(__file__).parent, 'botan-windows-64.dll')
+
+#print(BOTAN_BINARY_DIR_LINUX)
+
 BOTAN_FFI_VERSION = 20191214
 
 #

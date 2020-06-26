@@ -1,77 +1,92 @@
 import sys
 import time
-# import tkinter as tk
-# from tkinter.font import Font
 import pygame
 
-#from thirdparty import botan2 as bt
-
+import modules.utils as utils
+from modules.keymanager import KeyManager
+import thirdparty.botan2 as bt
 
 class App:
 
     def run(self):
-        print('Hello, cm3 tinkered!')
+        print('Program Started...!')
 
-        # window = tk.Tk()
-        # menu = tk.Menu()
-        # font = tk.font.Font(font=menu["font"])
-        # print(font.actual())
+        # algorithm parameters for botan
+        algorithm = 'ecdsa'
+        algorithm_params = 'secp256k1'
+        hash_func = 'EMSA1(SHA-256)'
 
+        key_manager = KeyManager(algorithm=algorithm, algorithm_params=algorithm_params, hash_func=hash_func)
 
-        # frame = tk.Frame(window)
-        # frame.pack()
-        # button = tk.Button(frame, command=quit)
-        # font = tk.font.Font(font=button["font"])
-        # print(font.actual())
-
-#        button.pack(side=tk.LEFT)
-        # window.mainloop()
-
-
-#        print('Botan version number: ', bt.version_major())
-        #
-        pygame.init()
-        size = width, height = (400, 400)
-        speed = [1, 1]
+        # colors
         black = 0, 0, 0
         white = 255, 255, 255
-        #
+        grey = 122, 122, 122
+
+        # initilaize pygame
+        pygame.init()
+
+        # initialize screen
+        size = width, height = (400, 400)
         screen = pygame.display.set_mode(size)
         screen.fill(white)
 
-        font = pygame.font.SysFont("comicsansms", 72)
+        # message area
+        msg_area = (50, 50, 300, 200)
+        msg_label_text = pygame.font.SysFont("monospace", 12)
+        msg_label_surf, msg_label_rect = utils.text_objects("", msg_label_text, black)
+        msg_button_label_center = (200, 100)
+        msg_label_rect.center = msg_button_label_center
 
+        # button rects
+        close_button_rect = (75, 300, 100, 40)
+        close_button_label_center = (125, 320)
+        close_button = pygame.Rect(*close_button_rect)
 
-        label = font.render("Some text!", 1, (255,255,0))
-        screen.blit(label, (100, 100))
-        #
-        button = pygame.Rect(380, 10, 15, 15)
-        pygame.draw.rect(screen, (black), button)
+        gen_button_rect = (225, 300, 100, 40)
+        gen_button_label_center = (275, 320)
+        gen_button = pygame.Rect(*gen_button_rect)
+
+        # button labels
+        close_label_text = pygame.font.SysFont("monospace", 12)
+        close_label_surf, close_label_rect = utils.text_objects("Close App", close_label_text, black)
+        close_label_rect.center = close_button_label_center
+ 
+        gen_label_text = pygame.font.SysFont("monospace", 12)
+        gen_label_surf, gen_label_rect = utils.text_objects("Generate", gen_label_text, black)
+        gen_label_rect.center = gen_button_label_center
+
+        # render buttons and layouts
+        pygame.draw.rect(screen, (grey), msg_area)
+        screen.blit(msg_label_surf, msg_label_rect)
+        pygame.draw.rect(screen, (grey), close_button)
+        screen.blit(close_label_surf, close_label_rect)
+        pygame.draw.rect(screen, (grey), gen_button)
+        screen.blit(gen_label_surf, gen_label_rect)
         pygame.display.update()
-        # ball = pygame.image.load('rsz_ball.gif')
-        # ball_rect = ball.get_rect()
-        
-        while 1:
+
+
+        while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     pos = event.pos
-        
-                    if button.collidepoint(pos[0], pos[1]):
+                    if close_button.collidepoint(pos[0], pos[1]):
                         sys.exit()
-        
-            # ball_rect = ball_rect.move(speed)
-            # if ball_rect.left < 0 or ball_rect.right > width:
-            #     speed[0] = -speed[0]
-            # if ball_rect.top < 0 or ball_rect.bottom > height:
-            #     speed[1] = -speed[1]
-        
-            # screen.fill(black)
-            # screen.blit(ball, ball_rect)
-            # pygame.display.flip()
-        
-            pygame.draw.rect(screen, black, button)
+                    if gen_button.collidepoint(pos[0], pos[1]):
+                        msg_label_surf, msg_label_rect = utils.text_objects(str(bt.version_major()), msg_label_text, black)
+                        msg_label_rect.center = msg_button_label_center
+
+                        screen.fill(white)
+                        pygame.draw.rect(screen, (grey), msg_area)
+                        screen.blit(msg_label_surf, msg_label_rect)
+                        pygame.draw.rect(screen, (grey), close_button)
+                        screen.blit(close_label_surf, close_label_rect)
+                        pygame.draw.rect(screen, (grey), gen_button)
+                        screen.blit(gen_label_surf, gen_label_rect)
+
             pygame.display.update()
-        
-            time.sleep(0.005)
+
+	        # delay
+            time.sleep(0.05)

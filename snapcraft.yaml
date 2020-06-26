@@ -1,21 +1,17 @@
-name: pygame-demo
+name: ucore-security-module
 version: '0.0.1'
-summary: Demo of using frame buffer from snappy
+summary: Message Signing module using botan on ubuntu core. (Display inclusive)
 
 description: |
-    PyGame bouncing ball on a snappy package
+    Message signing module using botan on ubuntu core. Includes display functionalities
 base: core18
 confinement: devmode
 
 layout:
     /usr/share/X11:
         bind: $SNAP/usr/share/X11
-#    /usr/share/tcltk:
-#        bind: $SNAP/usr/share/tcltk
-#    /usr/lib/tcltk:
-#        bind: $SNAP/usr/lib/tcltk
-#    /usr/bin/sdl2-config:
-#        bind-file: $SNAP/usr/bin/sdl2-config
+    /etc/fonts:
+        bind: $SNAP/etc/fonts
 
 parts:
     xwayland-kiosk-helper:
@@ -24,12 +20,11 @@ parts:
         build-packages: [ build-essential ]
         stage-packages: [ xwayland, i3, libegl1-mesa ]
 
- #   pygame:
- #       plugin: autotools
- #       source: pygame-1.9.6/
- #       stage-packages: [ libfreetype6-dev, libsdl2-dev ]
+    botan:
+        plugin: dump
+        source: ./libraries/botan-jack-ffi-ecdsa-der-format/staging
 
-    pygame-demo:
+    ucore-security-module:
         plugin: python
         python-version: python3
         source: .
@@ -87,8 +82,8 @@ environment:
       XWAYLAND_FULLSCREEN_WINDOW_HINT: title="tk"
 
 apps:
-    pygame-demo:
-        command: xwayland-kiosk-launch $SNAP/bin/pygame
+    ucore-security-module:
+        command: xwayland-kiosk-launch $SNAP/bin/ucore-security-module
         plugs:
         - wayland
         - x11

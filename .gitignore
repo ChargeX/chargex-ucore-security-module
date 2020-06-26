@@ -47,3 +47,8 @@ venv.bak/
 
 # snaps
 *.snap
+
+# configure outputs
+*.pem
+Makefile
+build/

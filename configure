@@ -1,0 +1,19 @@
+#! /bin/bash
+
+BOTAN_LIBRARY_PATH=$PWD/libraries/botan-jack-ffi-ecdsa-der-format
+BOTAN_LIBRARY_BUILD=$PWD/libraries/botan-jack-ffi-ecdsa-der-format/staging/libbotan-2.so
+
+BOTAN_BIN_PATH=$SNAP/bin
+
+
+if [ -f "$BOTAN_LIBRARY_BUILD" ]; then
+        echo "Botan shared library exists. Skipping build."
+        cp $BOTAN_LIBRARY_BUILD $BOTAN_BIN_PATH
+else
+        cd BOTAN_LIBRARY_PATH
+        mkdir staging
+        python3 $BOTAN_LIBRARY_PATH/configure.py && make
+        cp libbotan-2.so staging/
+fi
+
+echo 'Config completed.'
