@@ -1,10 +1,15 @@
 import sys
 import time
 import pygame
+import math
+import random
 
 import modules.utils as utils
 from modules.keymanager import KeyManager
 import thirdparty.botan2 as bt
+
+TEST_MSG_LIST = ['Message_1', 'Message_2', 'Message_3', 'Message_4']
+CHARS_PER_LINE = 40
 
 class App:
 
@@ -35,8 +40,8 @@ class App:
         msg_area = (50, 50, 300, 200)
         msg_label_text = pygame.font.SysFont("monospace", 12)
         msg_label_surf, msg_label_rect = utils.text_objects("", msg_label_text, black)
-        msg_button_label_center = (200, 100)
-        msg_label_rect.center = msg_button_label_center
+        msg_button_label_center = [200, 100]
+        msg_label_rect.center = (msg_button_label_center[0], msg_button_label_center[1])
 
         # button rects
         close_button_rect = (75, 300, 100, 40)
@@ -75,16 +80,21 @@ class App:
                     if close_button.collidepoint(pos[0], pos[1]):
                         sys.exit()
                     if gen_button.collidepoint(pos[0], pos[1]):
-                        msg_label_surf, msg_label_rect = utils.text_objects(str(bt.version_major()), msg_label_text, black)
-                        msg_label_rect.center = msg_button_label_center
-
                         screen.fill(white)
+
                         pygame.draw.rect(screen, (grey), msg_area)
-                        screen.blit(msg_label_surf, msg_label_rect)
                         pygame.draw.rect(screen, (grey), close_button)
                         screen.blit(close_label_surf, close_label_rect)
                         pygame.draw.rect(screen, (grey), gen_button)
                         screen.blit(gen_label_surf, gen_label_rect)
+
+                        signature = key_manager.sign(TEST_MSG_LIST[random.randint(0, 3)]).hex()
+            
+                        print(math.ceil(len(signature) / CHARS_PER_LINE))
+                        for i in range(math.ceil(len(signature) / CHARS_PER_LINE)):
+                            msg_label_surf, msg_label_rect = utils.text_objects(signature[(i * CHARS_PER_LINE): min(((i + 1) * CHARS_PER_LINE), len(signature))], msg_label_text, black)
+                            msg_label_rect.center = (msg_button_label_center[0], msg_button_label_center[1] + i * 15)
+                            screen.blit(msg_label_surf, msg_label_rect)
 
             pygame.display.update()
 
